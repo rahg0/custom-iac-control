@@ -1,0 +1,37 @@
+name: Orca IaC Scan Workflow
+on:
+  # Scan for each push event on your protected branch. If you have a different branch configured, please adjust the configuration accordingly by replacing 'main'.
+  push:
+    branches: [ "main" ]
+      
+  pull_request:
+    branches: [ "main" ]
+    
+permissions: 
+  actions: read
+  contents: read
+  checks: write
+  issues: write
+  pull-requests: write
+  security-events: write
+  statuses: write
+
+jobs:
+  orca-iac_scan:
+    name: Orca IaC Scan
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_KEY: default
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Orca IaC Scan
+        uses: orcasecurity/shiftleft-iac-action@v1
+        id: orca_scan
+        with:
+          api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
+          project_key: ${{ env.PROJECT_KEY }}
+          path: "./"
+          show_annotations: true
+          custom_controls: "./.github/workflows/opa_policies/custom_queries"
