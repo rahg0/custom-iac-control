@@ -13,7 +13,6 @@ resource "google_compute_firewall" "good_firewall"  {
   source_ranges = ["1.1.1.1/32"]
 }
 
-# orca-iac ignore-block
 resource "google_compute_firewall" "bad_firewall"  {
   name    = "bad-firewall" 
   network = var.network
